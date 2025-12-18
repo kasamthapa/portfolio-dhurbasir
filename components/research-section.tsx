@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useInView } from "@/hooks/use-in-view"
-import { cn } from "@/lib/utils"
+import { useInView } from "@/hooks/use-in-view";
+import { cn } from "@/lib/utils";
 
 const researchAreas = [
   "Postcolonial Literature",
@@ -10,7 +10,7 @@ const researchAreas = [
   "FinTech Trends",
   "Entrepreneurial Behavior",
   "Educational Quality",
-]
+];
 
 const publications = [
   {
@@ -28,46 +28,55 @@ const publications = [
     count: "70+",
     description: "Professional development sessions",
   },
-]
+];
 
 export function ResearchSection() {
-  const { ref, isInView } = useInView({ threshold: 0.1 })
+  const { ref, isInView } = useInView({ threshold: 0.1 });
 
   return (
     <section
       id="research"
       ref={ref}
-      className="py-32 sm:py-40 md:py-48 lg:py-56 xl:py-64 px-6 sm:px-8 md:px-12 lg:px-20 xl:px-32 bg-foreground text-background"
+      className="py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 bg-foreground text-background overflow-x-hidden max-w-full"
     >
-      <div className="max-w-[1800px] mx-auto">
-        <div className="grid lg:grid-cols-12 gap-12 md:gap-16 lg:gap-20 xl:gap-32">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 xl:gap-16">
           {/* Section Label */}
-          <div className="lg:col-span-4 xl:col-span-3">
+          <div className="lg:w-48 shrink-0">
             <div
               className={cn(
                 "transition-all duration-1000 ease-out",
-                isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
+                isInView
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-8"
               )}
             >
-              <span className="text-[11px] tracking-[0.3em] uppercase text-background/50">Research</span>
-              <div className="w-8 h-px bg-background/20 mt-6" />
+              <span className="text-[11px] tracking-[0.3em] uppercase text-background/50">
+                Research
+              </span>
+              <div className="w-8 h-px bg-background/20 mt-4" />
             </div>
           </div>
 
           {/* Content */}
-          <div className="lg:col-span-8 xl:col-span-9 space-y-20 md:space-y-24 lg:space-y-32">
+          <div className="flex-1 space-y-10 md:space-y-12">
+            {/* Focus Areas */}
             <div
               className={cn(
                 "transition-all duration-1000 ease-out delay-150",
-                isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
+                isInView
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-8"
               )}
             >
-              <h3 className="text-[11px] tracking-[0.25em] uppercase text-background/50 mb-8 md:mb-10">Focus Areas</h3>
-              <div className="flex flex-wrap gap-3 sm:gap-4">
+              <h3 className="text-[11px] tracking-[0.25em] uppercase text-background/50 mb-4 md:mb-6">
+                Focus Areas
+              </h3>
+              <div className="flex flex-wrap gap-2">
                 {researchAreas.map((area) => (
                   <span
                     key={area}
-                    className="px-4 sm:px-5 py-2.5 sm:py-3 border border-background/15 text-[13px] sm:text-sm text-background/70 hover:text-background hover:border-background/40 transition-all duration-500"
+                    className="px-3 py-1.5 sm:px-4 sm:py-2 border border-background/15 text-xs sm:text-sm text-background/70 hover:text-background hover:border-background/40 transition-all duration-500"
                   >
                     {area}
                   </span>
@@ -75,19 +84,26 @@ export function ResearchSection() {
               </div>
             </div>
 
+            {/* Publications Stats */}
             <div
               className={cn(
-                "grid sm:grid-cols-3 gap-8 sm:gap-12 md:gap-16 transition-all duration-1000 ease-out delay-300",
-                isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
+                "grid grid-cols-3 gap-3 sm:gap-6 md:gap-8 transition-all duration-1000 ease-out delay-300",
+                isInView
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-8"
               )}
             >
               {publications.map((pub) => (
-                <div key={pub.type} className="space-y-4">
-                  <span className="font-serif text-5xl sm:text-6xl md:text-7xl lg:text-8xl text-background tracking-tight">
+                <div key={pub.type} className="space-y-1 sm:space-y-2">
+                  <span className="font-serif text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-background tracking-tight">
                     {pub.count}
                   </span>
-                  <h4 className="text-sm sm:text-base font-serif text-background">{pub.type}</h4>
-                  <p className="text-[13px] sm:text-sm text-background/50 leading-relaxed">{pub.description}</p>
+                  <h4 className="text-xs sm:text-sm font-serif text-background">
+                    {pub.type}
+                  </h4>
+                  <p className="hidden sm:block text-xs text-background/50 leading-relaxed">
+                    {pub.description}
+                  </p>
                 </div>
               ))}
             </div>
@@ -95,18 +111,21 @@ export function ResearchSection() {
             {/* Author Note */}
             <div
               className={cn(
-                "pt-16 md:pt-20 border-t border-background/10 transition-all duration-1000 ease-out delay-450",
-                isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
+                "pt-8 md:pt-10 border-t border-background/10 transition-all duration-1000 ease-out delay-450",
+                isInView
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-8"
               )}
             >
-              <p className="text-[15px] sm:text-base text-background/50 leading-[1.8] max-w-2xl">
-                Editor-in-Chief and Author at Sunrise Publications, Guinness Publications, and Megha Publications —
-                contributing to curriculum development across Nepal.
+              <p className="text-xs sm:text-sm text-background/50 leading-relaxed max-w-xl">
+                Editor-in-Chief and Author at Sunrise Publications, Guinness
+                Publications, and Megha Publications — contributing to
+                curriculum development across Nepal.
               </p>
             </div>
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }

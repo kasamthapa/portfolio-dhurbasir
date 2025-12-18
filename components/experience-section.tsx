@@ -1,14 +1,15 @@
-"use client"
+"use client";
 
-import { useInView } from "@/hooks/use-in-view"
-import { cn } from "@/lib/utils"
+import { useInView } from "@/hooks/use-in-view";
+import { cn } from "@/lib/utils";
 
 const experiences = [
   {
     period: "2023 — Present",
     title: "Head – Internal Quality Assurance Cell",
     organization: "Kathmandu Model College",
-    description: "Lead institutional quality assurance and accreditation initiatives.",
+    description:
+      "Lead institutional quality assurance and accreditation initiatives.",
   },
   {
     period: "Present",
@@ -28,10 +29,10 @@ const experiences = [
     organization: "Kathmandu Model College",
     description: "Directed academic programs for a decade.",
   },
-]
+];
 
 export function ExperienceSection() {
-  const { ref, isInView } = useInView({ threshold: 0.1 })
+  const { ref, isInView } = useInView({ threshold: 0.1 });
 
   return (
     <section
@@ -46,10 +47,14 @@ export function ExperienceSection() {
             <div
               className={cn(
                 "lg:sticky lg:top-40 transition-all duration-1000 ease-out",
-                isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
+                isInView
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-8"
               )}
             >
-              <span className="text-[11px] tracking-[0.3em] uppercase text-muted-foreground">Experience</span>
+              <span className="text-[11px] tracking-[0.3em] uppercase text-muted-foreground">
+                Experience
+              </span>
               <div className="w-8 h-px bg-border mt-6 mb-8" />
               <h2 className="font-serif text-xl sm:text-2xl md:text-3xl text-foreground leading-tight">
                 Leadership &<br className="hidden sm:block" /> Academic Roles
@@ -64,7 +69,9 @@ export function ExperienceSection() {
                   key={index}
                   className={cn(
                     "group border-t border-border py-10 sm:py-12 md:py-14 lg:py-16 transition-all duration-1000 ease-out",
-                    isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8",
+                    isInView
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-8"
                   )}
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
@@ -78,7 +85,9 @@ export function ExperienceSection() {
                       <h3 className="text-lg sm:text-xl md:text-2xl font-serif text-foreground group-hover:opacity-60 transition-opacity duration-500">
                         {exp.title}
                       </h3>
-                      <p className="text-[13px] sm:text-sm text-muted-foreground">{exp.organization}</p>
+                      <p className="text-[13px] sm:text-sm text-muted-foreground">
+                        {exp.organization}
+                      </p>
                       <p className="text-[15px] sm:text-base text-muted-foreground leading-relaxed pt-2">
                         {exp.description}
                       </p>
@@ -91,5 +100,5 @@ export function ExperienceSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

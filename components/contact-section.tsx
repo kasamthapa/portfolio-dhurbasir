@@ -5,7 +5,7 @@ import type React from "react";
 import { useState } from "react";
 import { useInView } from "@/hooks/use-in-view";
 import { cn } from "@/lib/utils";
-import { Loader2, Send, CheckCircle } from "lucide-react";
+import { Loader2, Send, CheckCircle, Download } from "lucide-react";
 
 export function ContactSection() {
   const { ref, isInView } = useInView({ threshold: 0.2 });
@@ -130,6 +130,15 @@ export function ContactSection() {
                   Open to academic collaborations, research opportunities,
                   educational consultancy, and speaking engagements.
                 </p>
+
+                <a
+                  href="/cv.pdf"
+                  download="Dhurba-Prasad-Timalsina-CV.pdf"
+                  className="inline-flex items-center gap-3 px-5 py-2.5 bg-foreground text-background hover:bg-foreground/90 transition-all duration-300 text-sm tracking-wide group"
+                >
+                  <Download className="w-4 h-4 group-hover:translate-y-0.5 transition-transform duration-300" />
+                  <span>Download CV</span>
+                </a>
               </div>
 
               {/* Right Column - Contact Form */}
