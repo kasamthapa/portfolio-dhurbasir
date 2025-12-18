@@ -8,52 +8,52 @@ import { X, ChevronLeft, ChevronRight } from "lucide-react";
 
 const galleryImages = [
   {
-    src: "/images/gallery/conference-1.png",
+    src: "/images/gallery/conference-presentation.png",
     alt: "International Conference Presentation",
     category: "Conferences",
   },
   {
-    src: "/images/gallery/workshop-1.png",
+    src: "/images/gallery/faculty-workshop.jpg",
     alt: "Faculty Workshop Session",
     category: "Workshops",
   },
   {
-    src: "/images/gallery/award-1.png",
+    src: "/images/gallery/award-ceremony.png",
     alt: "Award Ceremony",
     category: "Awards",
   },
   {
-    src: "/images/gallery/seminar-1.png",
+    src: "/images/gallery/academic-seminar.jpg",
     alt: "Academic Seminar",
     category: "Seminars",
   },
   {
-    src: "/images/gallery/book-launch-1.png",
+    src: "/images/gallery/book-launch-event.jpg",
     alt: "Book Launch Event",
     category: "Publications",
   },
   {
-    src: "/images/gallery/conference-2.png",
+    src: "/images/gallery/panel-discussion.png",
     alt: "Panel Discussion",
     category: "Conferences",
   },
   {
-    src: "/images/gallery/conference-3.png",
-    alt: "Panel Discussion",
+    src: "/images/gallery/conference-keynote.png",
+    alt: "Conference Keynote",
     category: "Conferences",
   },
   {
-    src: "/images/gallery/conference-4.png",
-    alt: "Panel Discussion",
+    src: "/images/gallery/modern-conference-hall.png",
+    alt: "Modern Conference Hall",
     category: "Conferences",
   },
   {
-    src: "/images/gallery/workshop-2.png",
+    src: "/images/gallery/training-session.jpg",
     alt: "Training Session",
     category: "Workshops",
   },
   {
-    src: "/images/gallery/award-2.png",
+    src: "/images/gallery/recognition-ceremony.jpg",
     alt: "Recognition Ceremony",
     category: "Awards",
   },

@@ -11,73 +11,73 @@ const books = [
     title: "Business Communication",
     publisher: "Sunrise Publication",
     level: "BBS 1st Year",
-    cover: "/images/books/book-1.png",
+    cover: "/images/books/business-communication-textbook.jpg",
   },
   {
     title: "English for Business",
     publisher: "Guinness Publications",
     level: "BBS Program",
-    cover: "/images/books/book-2.png",
+    cover: "/images/books/english-for-business-textbook.jpg",
   },
   {
     title: "Compulsory English",
     publisher: "Ocean Books",
     level: "Grade 11",
-    cover: "/images/books/book-3.png",
+    cover: "/images/books/compulsory-english-textbook.jpg",
   },
   {
     title: "Business English",
     publisher: "Vidhyarthi Publication",
     level: "BBA Program",
-    cover: "/images/books/book-4.png",
+    cover: "/images/books/business-english-textbook.jpg",
   },
   {
     title: "Academic Writing",
     publisher: "Delight Print Publication",
     level: "Bachelor Level",
-    cover: "/images/books/book-5.png",
+    cover: "/images/books/academic-writing-textbook.jpg",
   },
   {
     title: "English Literature",
     publisher: "Megha Publications",
     level: "Bachelor Level",
-    cover: "/images/books/book-6.png",
+    cover: "/images/books/english-literature-textbook.jpg",
   },
   {
     title: "Business Communication",
     publisher: "Sunrise Publication",
     level: "BBS 1st Year",
-    cover: "/images/books/book-1.png",
+    cover: "/images/books/business-communication-textbook-cover.jpg",
   },
   {
     title: "English for Business",
     publisher: "Guinness Publications",
     level: "BBS Program",
-    cover: "/images/books/book-2.png",
+    cover: "/images/books/english-business-textbook-cover.jpg",
   },
   {
     title: "Compulsory English",
     publisher: "Ocean Books",
     level: "Grade 11",
-    cover: "/images/books/book-3.png",
+    cover: "/images/books/grade-11-english-textbook.jpg",
   },
   {
     title: "Business English",
     publisher: "Vidhyarthi Publication",
     level: "BBA Program",
-    cover: "/images/books/book-4.png",
+    cover: "/images/books/bba-business-english-textbook.jpg",
   },
   {
     title: "Academic Writing",
     publisher: "Delight Print Publication",
     level: "Bachelor Level",
-    cover: "/images/books/book-5.png",
+    cover: "/images/books/bachelor-academic-writing-textbook.jpg",
   },
   {
     title: "English Literature",
     publisher: "Megha Publications",
     level: "Bachelor Level",
-    cover: "/images/books/book-6.png",
+    cover: "/images/books/bachelor-english-literature-textbook.jpg",
   },
 ];
 
@@ -218,6 +218,7 @@ export function BooksSection() {
                 alt={book.title}
                 fill
                 className="object-cover transition-all duration-700 group-hover:scale-110"
+                sizes="(max-width: 640px) 140px, (max-width: 768px) 160px, (max-width: 1024px) 180px, 200px"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="absolute inset-0 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-all duration-500">
