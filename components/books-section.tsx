@@ -4,7 +4,7 @@ import { useInView } from "@/hooks/use-in-view";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 const books = [
   {
@@ -86,6 +86,7 @@ export function BooksSection() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const checkScrollButtons = () => {
     if (scrollContainerRef.current) {
@@ -93,8 +94,21 @@ export function BooksSection() {
         scrollContainerRef.current;
       setCanScrollLeft(scrollLeft > 0);
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+
+      // Calculate active index for indicator
+      const itemWidth = 200;
+      const newIndex = Math.round(scrollLeft / itemWidth);
+      setActiveIndex(newIndex);
     }
   };
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", checkScrollButtons);
+      return () => container.removeEventListener("scroll", checkScrollButtons);
+    }
+  }, []);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
@@ -103,7 +117,6 @@ export function BooksSection() {
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
       });
-      setTimeout(checkScrollButtons, 300);
     }
   };
 
@@ -121,12 +134,18 @@ export function BooksSection() {
             isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           )}
         >
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 sm:gap-6">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
             <div>
               <span className="text-[11px] tracking-[0.3em] uppercase text-muted-foreground">
-                Publications
+                04 — Publications
               </span>
-              <div className="w-8 h-px bg-border mt-4 mb-5" />
+              <div
+                className={cn(
+                  "h-px bg-border mt-4 mb-5 transition-all duration-1000 ease-out",
+                  isInView ? "w-8" : "w-0"
+                )}
+                style={{ transitionDelay: "200ms" }}
+              />
               <h2 className="font-serif text-xl sm:text-2xl md:text-3xl text-foreground leading-tight">
                 Authored Books
               </h2>
@@ -140,9 +159,9 @@ export function BooksSection() {
                   onClick={() => scroll("left")}
                   disabled={!canScrollLeft}
                   className={cn(
-                    "w-10 h-10 flex items-center justify-center border border-border transition-all duration-300",
+                    "w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center border border-border transition-all duration-500",
                     canScrollLeft
-                      ? "hover:bg-foreground hover:text-background cursor-pointer"
+                      ? "hover:bg-foreground hover:text-background hover:border-foreground cursor-pointer"
                       : "opacity-30 cursor-not-allowed"
                   )}
                   aria-label="Scroll left"
@@ -153,9 +172,9 @@ export function BooksSection() {
                   onClick={() => scroll("right")}
                   disabled={!canScrollRight}
                   className={cn(
-                    "w-10 h-10 flex items-center justify-center border border-border transition-all duration-300",
+                    "w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center border border-border transition-all duration-500",
                     canScrollRight
-                      ? "hover:bg-foreground hover:text-background cursor-pointer"
+                      ? "hover:bg-foreground hover:text-background hover:border-foreground cursor-pointer"
                       : "opacity-30 cursor-not-allowed"
                   )}
                   aria-label="Scroll right"
@@ -170,43 +189,47 @@ export function BooksSection() {
 
       <div
         ref={scrollContainerRef}
-        onScroll={checkScrollButtons}
         className={cn(
-          "flex gap-4 sm:gap-6 overflow-x-auto scrollbar-hide scroll-smooth px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 pb-4 transition-all duration-1000 ease-out delay-200",
+          "flex gap-4 sm:gap-6 overflow-x-auto scrollbar-hide scroll-smooth px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20 pb-4 transition-all duration-1000 ease-out",
           isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         )}
-        style={{
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-        }}
+        style={{ transitionDelay: "300ms" }}
       >
-        {/* Left spacer for centering on larger screens */}
         <div className="hidden xl:block shrink-0 w-[calc((100vw-1400px)/2)]" />
 
         {books.map((book, index) => (
           <div
             key={index}
-            className="group shrink-0 w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px]"
-            style={{ transitionDelay: `${index * 50}ms` }}
+            className={cn(
+              "group shrink-0 w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px] transition-all duration-700 ease-out",
+              isInView
+                ? "translate-y-0 opacity-100"
+                : "translate-y-12 opacity-0"
+            )}
+            style={{ transitionDelay: `${400 + index * 50}ms` }}
           >
-            {/* Book Cover */}
-            <div className="relative aspect-[3/4] bg-muted mb-3 sm:mb-4 overflow-hidden border border-border">
+            {/* Book Cover with enhanced hover */}
+            <div className="relative aspect-[3/4] bg-muted mb-3 sm:mb-4 overflow-hidden border border-border group-hover:shadow-xl transition-all duration-500">
               <Image
                 src={
                   book.cover ||
-                  "/placeholder.svg?height=320&width=240&query=book cover" ||
-                  "/placeholder.svg"
+                  "/placeholder.svg?height=320&width=240&query=book cover"
                 }
                 alt={book.title}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-cover transition-all duration-700 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 flex items-end p-4 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                <span className="text-background text-xs font-medium">
+                  View Details
+                </span>
+              </div>
             </div>
 
             {/* Book Info */}
             <div className="space-y-1">
-              <h3 className="font-serif text-sm sm:text-base text-foreground leading-tight line-clamp-2 group-hover:opacity-70 transition-opacity duration-300">
+              <h3 className="font-serif text-sm sm:text-base text-foreground leading-tight line-clamp-2 group-hover:text-muted-foreground transition-colors duration-500">
                 {book.title}
               </h3>
               <p className="text-[11px] sm:text-xs text-muted-foreground">
@@ -219,17 +242,37 @@ export function BooksSection() {
           </div>
         ))}
 
-        {/* Right spacer */}
         <div className="shrink-0 w-4 sm:w-6 md:w-8" />
       </div>
 
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-20">
+        <div
+          className={cn(
+            "flex justify-center gap-1.5 mt-6 transition-all duration-1000 ease-out",
+            isInView ? "opacity-100" : "opacity-0"
+          )}
+          style={{ transitionDelay: "600ms" }}
+        >
+          {Array.from({ length: Math.ceil(books.length / 3) }).map((_, i) => (
+            <div
+              key={i}
+              className={cn(
+                "h-1 rounded-full transition-all duration-500",
+                Math.floor(activeIndex / 3) === i
+                  ? "w-6 bg-foreground"
+                  : "w-1.5 bg-foreground/20"
+              )}
+            />
+          ))}
+        </div>
+
         {/* Stats Footer */}
         <div
           className={cn(
-            "mt-10 sm:mt-12 lg:mt-16 pt-6 sm:pt-8 border-t border-border transition-all duration-1000 ease-out delay-300",
+            "mt-10 sm:mt-12 lg:mt-16 pt-6 sm:pt-8 border-t border-border transition-all duration-1000 ease-out",
             isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           )}
+          style={{ transitionDelay: "500ms" }}
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
             <p className="text-muted-foreground">

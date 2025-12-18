@@ -1,40 +1,53 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback } from "react";
 
 interface UseInViewOptions {
-  threshold?: number
-  rootMargin?: string
-  triggerOnce?: boolean
+  threshold?: number;
+  rootMargin?: string;
+  triggerOnce?: boolean;
 }
 
-export function useInView(options: UseInViewOptions = {}) {
-  const { threshold = 0.1, rootMargin = "0px", triggerOnce = true } = options
-  const ref = useRef<HTMLElement>(null)
-  const [isInView, setIsInView] = useState(false)
+export function useInView({
+  threshold = 0.1,
+  rootMargin = "0px",
+  triggerOnce = true,
+}: UseInViewOptions = {}) {
+  const ref = useRef<HTMLElement>(null);
+  const [isInView, setIsInView] = useState(false);
+  const [hasTriggered, setHasTriggered] = useState(false);
 
-  useEffect(() => {
-    const element = ref.current
-    if (!element) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
+  const handleIntersect = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          setIsInView(true)
+          setIsInView(true);
           if (triggerOnce) {
-            observer.unobserve(element)
+            setHasTriggered(true);
           }
         } else if (!triggerOnce) {
-          setIsInView(false)
+          setIsInView(false);
         }
-      },
-      { threshold, rootMargin },
-    )
+      });
+    },
+    [triggerOnce]
+  );
 
-    observer.observe(element)
+  useEffect(() => {
+    const element = ref.current;
+    if (!element || (triggerOnce && hasTriggered)) return;
 
-    return () => observer.disconnect()
-  }, [threshold, rootMargin, triggerOnce])
+    const observer = new IntersectionObserver(handleIntersect, {
+      threshold,
+      rootMargin,
+    });
 
-  return { ref, isInView }
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [threshold, rootMargin, triggerOnce, hasTriggered, handleIntersect]);
+
+  return { ref, isInView: triggerOnce ? isInView || hasTriggered : isInView };
 }

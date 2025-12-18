@@ -64,6 +64,7 @@ export function GallerySection() {
   const [selectedImage, setSelectedImage] = useState<
     (typeof galleryImages)[0] | null
   >(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [filter, setFilter] = useState<string>("All");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -103,7 +104,7 @@ export function GallerySection() {
 
   const scroll = (direction: "left" | "right") => {
     if (scrollContainerRef.current) {
-      const scrollAmount = 320;
+      const scrollAmount = 340;
       scrollContainerRef.current.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
@@ -111,12 +112,37 @@ export function GallerySection() {
     }
   };
 
+  const navigateLightbox = (direction: "prev" | "next") => {
+    if (!selectedImage) return;
+    const currentIndex = filteredImages.findIndex(
+      (img) => img.src === selectedImage.src
+    );
+    const newIndex =
+      direction === "prev"
+        ? (currentIndex - 1 + filteredImages.length) % filteredImages.length
+        : (currentIndex + 1) % filteredImages.length;
+    setSelectedImage(filteredImages[newIndex]);
+    setSelectedIndex(newIndex);
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!selectedImage) return;
+      if (e.key === "Escape") setSelectedImage(null);
+      if (e.key === "ArrowLeft") navigateLightbox("prev");
+      if (e.key === "ArrowRight") navigateLightbox("next");
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedImage, filteredImages]);
+
   return (
     <>
       <section
         id="gallery"
         ref={ref}
-        className="py-16 sm:py-20 md:py-24 lg:py-28 px-4 sm:px-6 md:px-8 lg:px-12 bg-secondary/30 overflow-x-hidden"
+        className="py-16 sm:py-20 md:py-24 lg:py-32 px-4 sm:px-6 md:px-8 lg:px-12 bg-secondary/30 overflow-hidden"
       >
         <div className="max-w-7xl mx-auto">
           {/* Section Header */}
@@ -132,45 +158,55 @@ export function GallerySection() {
               >
                 06 — Gallery
               </span>
+              <div
+                className={cn(
+                  "h-px bg-border transition-all duration-1000 ease-out",
+                  isInView ? "w-8" : "w-0"
+                )}
+                style={{ transitionDelay: "150ms" }}
+              />
               <h2
                 className={cn(
-                  "font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground leading-tight transition-all duration-1000 ease-out delay-100",
+                  "font-serif text-2xl sm:text-3xl lg:text-4xl text-foreground leading-tight transition-all duration-1000 ease-out",
                   isInView
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-8"
                 )}
+                style={{ transitionDelay: "100ms" }}
               >
                 Visual Documentation
               </h2>
               <p
                 className={cn(
-                  "text-sm sm:text-base text-muted-foreground max-w-md transition-all duration-1000 ease-out delay-150",
+                  "text-sm sm:text-base text-muted-foreground max-w-md transition-all duration-1000 ease-out",
                   isInView
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-8"
                 )}
+                style={{ transitionDelay: "150ms" }}
               >
                 Capturing moments from conferences, workshops, award ceremonies,
                 and academic engagements.
               </p>
             </div>
 
-            {/* Navigation Arrows */}
+            {/* Navigation */}
             <div
               className={cn(
-                "flex items-center gap-2 transition-all duration-1000 ease-out delay-200",
+                "flex items-center gap-3 transition-all duration-1000 ease-out",
                 isInView
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-8"
               )}
+              style={{ transitionDelay: "200ms" }}
             >
               <button
                 onClick={() => scroll("left")}
                 disabled={!canScrollLeft}
                 className={cn(
-                  "p-2 border border-border transition-all duration-300",
+                  "w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center border border-border transition-all duration-500",
                   canScrollLeft
-                    ? "text-foreground hover:bg-foreground hover:text-background"
+                    ? "text-foreground hover:bg-foreground hover:text-background hover:border-foreground"
                     : "text-muted-foreground/30 cursor-not-allowed"
                 )}
                 aria-label="Scroll left"
@@ -181,9 +217,9 @@ export function GallerySection() {
                 onClick={() => scroll("right")}
                 disabled={!canScrollRight}
                 className={cn(
-                  "p-2 border border-border transition-all duration-300",
+                  "w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center border border-border transition-all duration-500",
                   canScrollRight
-                    ? "text-foreground hover:bg-foreground hover:text-background"
+                    ? "text-foreground hover:bg-foreground hover:text-background hover:border-foreground"
                     : "text-muted-foreground/30 cursor-not-allowed"
                 )}
                 aria-label="Scroll right"
@@ -193,96 +229,113 @@ export function GallerySection() {
             </div>
           </div>
 
-          {/* Filter tabs */}
           <div
             className={cn(
-              "flex flex-wrap gap-2 mb-6 lg:mb-8 transition-all duration-1000 ease-out delay-200",
+              "flex flex-wrap gap-2 mb-6 lg:mb-8 transition-all duration-1000 ease-out",
               isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             )}
+            style={{ transitionDelay: "250ms" }}
           >
-            {categories.map((category) => (
+            {categories.map((category, index) => (
               <button
                 key={category}
                 onClick={() => setFilter(category)}
                 className={cn(
-                  "px-3 py-1.5 text-xs sm:text-sm transition-all duration-500",
+                  "px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm transition-all duration-500",
                   filter === category
                     ? "bg-foreground text-background"
-                    : "text-muted-foreground hover:text-foreground border border-border"
+                    : "text-muted-foreground hover:text-foreground border border-border hover:border-foreground"
                 )}
+                style={{ transitionDelay: `${300 + index * 50}ms` }}
               >
                 {category}
               </button>
             ))}
           </div>
 
-          {/* Horizontal Scrolling Gallery */}
           <div
             ref={scrollContainerRef}
             className={cn(
-              "flex gap-4 overflow-x-auto scrollbar-hide pb-4 -mx-4 px-4 sm:-mx-6 sm:px-6 md:-mx-8 md:px-8 lg:-mx-12 lg:px-12 transition-all duration-1000 ease-out delay-300",
-              isInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              "flex gap-4 sm:gap-5 overflow-x-auto scrollbar-hide pb-4 -mx-4 px-4 sm:-mx-6 sm:px-6 md:-mx-8 md:px-8 lg:-mx-12 lg:px-12 transition-all duration-1000 ease-out",
+              isInView ? "opacity-100" : "opacity-0"
             )}
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            style={{ transitionDelay: "350ms" }}
           >
             {filteredImages.map((image, index) => (
               <div
                 key={`${image.src}-${index}`}
-                className="group relative flex-shrink-0 w-[260px] sm:w-[300px] lg:w-[340px] aspect-[4/3] overflow-hidden bg-muted cursor-pointer"
-                onClick={() => setSelectedImage(image)}
+                className={cn(
+                  "group relative flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[360px] aspect-[4/3] overflow-hidden bg-muted cursor-pointer transition-all duration-700 ease-out",
+                  isInView
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-12 opacity-0"
+                )}
+                style={{ transitionDelay: `${400 + index * 75}ms` }}
+                onClick={() => {
+                  setSelectedImage(image);
+                  setSelectedIndex(index);
+                }}
               >
                 <Image
                   src={image.src || "/placeholder.svg"}
                   alt={image.alt}
                   fill
-                  className="object-cover transition-all duration-700 group-hover:scale-105"
-                  sizes="(max-width: 640px) 260px, (max-width: 1024px) 300px, 340px"
+                  className="object-cover transition-all duration-700 group-hover:scale-110"
+                  sizes="(max-width: 640px) 280px, (max-width: 1024px) 320px, 360px"
                 />
-                {/* Hover overlay with info */}
-                <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/60 transition-all duration-500 flex items-end">
-                  <div className="p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                    <p className="text-background text-sm font-medium">
-                      {image.alt}
-                    </p>
-                    <p className="text-background/70 text-xs mt-1">
-                      {image.category}
-                    </p>
-                  </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                <div className="absolute inset-0 flex flex-col items-start justify-end p-5 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                  <p className="text-background text-sm sm:text-base font-medium">
+                    {image.alt}
+                  </p>
+                  <p className="text-background/70 text-xs mt-1">
+                    {image.category}
+                  </p>
                 </div>
               </div>
-            ))}
-          </div>
-
-          {/* Scroll indicator */}
-          <div
-            className={cn(
-              "flex justify-center mt-6 gap-1 transition-all duration-1000 ease-out delay-400",
-              isInView ? "opacity-100" : "opacity-0"
-            )}
-          >
-            {filteredImages.map((_, index) => (
-              <div
-                key={index}
-                className="w-1.5 h-1.5 rounded-full bg-muted-foreground/30"
-              />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Lightbox Modal */}
       {selectedImage && (
         <div
-          className="fixed inset-0 z-50 bg-foreground/95 flex items-center justify-center p-4 sm:p-8"
+          className="fixed inset-0 z-50 bg-foreground/98 flex items-center justify-center"
           onClick={() => setSelectedImage(null)}
         >
+          {/* Close button */}
           <button
-            className="absolute top-4 right-4 sm:top-6 sm:right-6 text-background/70 hover:text-background transition-colors duration-500 z-10"
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 text-background/70 hover:text-background transition-colors duration-300 z-10 p-2"
             onClick={() => setSelectedImage(null)}
           >
             <X className="w-6 h-6" />
           </button>
-          <div className="relative max-w-4xl max-h-[80vh] w-full h-full">
+
+          {/* Navigation buttons */}
+          <button
+            className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-background/50 hover:text-background transition-colors duration-300 z-10"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigateLightbox("prev");
+            }}
+          >
+            <ChevronLeft className="w-8 h-8" />
+          </button>
+          <button
+            className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-background/50 hover:text-background transition-colors duration-300 z-10"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigateLightbox("next");
+            }}
+          >
+            <ChevronRight className="w-8 h-8" />
+          </button>
+
+          {/* Image */}
+          <div
+            className="relative max-w-5xl max-h-[80vh] w-full h-full m-4 sm:m-8 animate-scale-in"
+            onClick={(e) => e.stopPropagation()}
+          >
             <Image
               src={selectedImage.src || "/placeholder.svg"}
               alt={selectedImage.alt}
@@ -291,12 +344,15 @@ export function GallerySection() {
               sizes="(max-width: 1024px) 100vw, 1024px"
             />
           </div>
-          <div className="absolute bottom-6 left-6 right-6 text-center">
-            <p className="text-background text-base sm:text-lg">
+
+          {/* Caption */}
+          <div className="absolute bottom-6 left-0 right-0 text-center animate-blur-in">
+            <p className="text-background text-base sm:text-lg font-medium">
               {selectedImage.alt}
             </p>
             <p className="text-background/60 text-xs sm:text-sm mt-1">
-              {selectedImage.category}
+              {selectedImage.category} · {selectedIndex + 1} /{" "}
+              {filteredImages.length}
             </p>
           </div>
         </div>
