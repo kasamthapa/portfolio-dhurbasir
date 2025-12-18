@@ -8,7 +8,9 @@ interface SectionDividerProps {
 }
 
 export function SectionDivider({ variant = "default" }: SectionDividerProps) {
-  const { ref, isInView } = useInView({ threshold: 0.5 });
+  const { ref, isInView } = useInView<HTMLDivElement>({
+    threshold: 0.5,
+  });
 
   if (variant === "minimal") {
     return (

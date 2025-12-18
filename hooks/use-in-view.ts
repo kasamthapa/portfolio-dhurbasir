@@ -8,12 +8,12 @@ interface UseInViewOptions {
   triggerOnce?: boolean;
 }
 
-export function useInView({
+export function useInView<T extends HTMLElement = HTMLElement>({
   threshold = 0.1,
   rootMargin = "0px",
   triggerOnce = true,
 }: UseInViewOptions = {}) {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<T | null>(null);
   const [isInView, setIsInView] = useState(false);
   const [hasTriggered, setHasTriggered] = useState(false);
 
@@ -22,9 +22,7 @@ export function useInView({
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           setIsInView(true);
-          if (triggerOnce) {
-            setHasTriggered(true);
-          }
+          if (triggerOnce) setHasTriggered(true);
         } else if (!triggerOnce) {
           setIsInView(false);
         }
@@ -44,10 +42,11 @@ export function useInView({
 
     observer.observe(element);
 
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, [threshold, rootMargin, triggerOnce, hasTriggered, handleIntersect]);
 
-  return { ref, isInView: triggerOnce ? isInView || hasTriggered : isInView };
+  return {
+    ref,
+    isInView: triggerOnce ? isInView || hasTriggered : isInView,
+  };
 }
